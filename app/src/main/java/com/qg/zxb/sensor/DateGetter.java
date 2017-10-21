@@ -152,6 +152,7 @@ public class DateGetter {
 //                            Log.d(TAG, "run: " + (int) result);
 //                        }
                         bluetooth.sendText((int) dz + "#" + isMoving);
+                        Log.d(TAG, "run: " + (int) dz);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
