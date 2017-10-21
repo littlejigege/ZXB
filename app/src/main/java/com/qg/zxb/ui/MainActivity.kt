@@ -20,6 +20,7 @@ import com.qg.zxb.bluetooth.ConnectListener
 import com.qg.zxb.bluetooth.MsgListener
 import com.qg.zxb.model.Msg
 import com.qg.zxb.model.MsgAdapter
+import com.qg.zxb.sensor.DateGetter
 import com.qg.zxb.viewmodel.MainViewModel
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
     private lateinit var btManager: BTManager
     private val viewModel by lazy { MainViewModel(this) }
     private lateinit var msgAdapter: MsgAdapter
+    private val dateGetter by lazy { DateGetter.with(this, viewModel) }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +91,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
         bt33.text = Preference.get("config", "bt33.name" to "9") as String
         bt41.text = Preference.get("config", "bt41.name" to "←") as String
         bt42.text = Preference.get("config", "bt42.name" to "0") as String
-        bt43.text = Preference.get("config", "bt43.name" to "→") as String
+        bt43.text = "开始"
+        //bt43.text = Preference.get("config", "bt43.name" to "→") as String
         bt11.setOnClickListener(this)
         bt12.setOnClickListener(this)
         bt13.setOnClickListener(this)
@@ -113,7 +116,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
         bt33.setOnLongClickListener(this)
         bt41.setOnLongClickListener(this)
         bt42.setOnLongClickListener(this)
-        bt43.setOnLongClickListener(this)
+        //  bt43.setOnLongClickListener(this)
 
     }
 
@@ -158,7 +161,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
                 sendAndAddToscren(Preference.get("config", "bt42.text" to "0") as String)
             }
             bt43 -> {
-                sendAndAddToscren(Preference.get("config", "bt43.text" to "→") as String)
+                if (bt43.text == "开始") {
+                    dateGetter.start()
+                    bt43.text = "停止"
+                } else {
+                    dateGetter.stop()
+                    bt43.text ="开始"
+                }
+                //sendAndAddToscren(Preference.get("config", "bt43.text" to "→") as String)
             }
         }
     }
@@ -244,4 +254,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
                 })
         builder.show()
     }
+
+    override fun onDestroy() {
+        dateGetter.stop()
+        super.onDestroy()
+    }
+
 }
