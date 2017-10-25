@@ -120,7 +120,7 @@ public class DateGetter {
                 while (isStart) {
                     try {
 
-                        Thread.sleep(100);
+                        Thread.sleep(1000);
 
 //                        if (change == 1) {
 //                            if (Math.abs(Z) > G * 0.8) {

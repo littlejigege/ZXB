@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
         bt32.text = Preference.get("config", "bt32.name" to "8") as String
         bt33.text = Preference.get("config", "bt33.name" to "9") as String
         bt41.text = Preference.get("config", "bt41.name" to "←") as String
-        bt42.text = Preference.get("config", "bt42.name" to "0") as String
+        bt42.text = "清屏"
         bt43.text = "开始"
         //bt43.text = Preference.get("config", "bt43.name" to "→") as String
         bt11.setOnClickListener(this)
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
         bt32.setOnLongClickListener(this)
         bt33.setOnLongClickListener(this)
         bt41.setOnLongClickListener(this)
-        bt42.setOnLongClickListener(this)
+        // bt42.setOnLongClickListener(this)
         //  bt43.setOnLongClickListener(this)
 
     }
@@ -158,7 +158,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
                 sendAndAddToscren(Preference.get("config", "bt41.text" to "←") as String)
             }
             bt42 -> {
-                sendAndAddToscren(Preference.get("config", "bt42.text" to "0") as String)
+                viewModel.msgList.clear()
+                msgAdapter.notifyDataSetChanged()
             }
             bt43 -> {
                 if (bt43.text == "开始") {
@@ -166,7 +167,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
                     bt43.text = "停止"
                 } else {
                     dateGetter.stop()
-                    bt43.text ="开始"
+                    bt43.text = "开始"
                 }
                 //sendAndAddToscren(Preference.get("config", "bt43.text" to "→") as String)
             }
@@ -206,10 +207,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClick
                 showDialog(bt41, "bt41")
             }
             bt42 -> {
-                showDialog(bt42, "bt42")
+                //showDialog(bt42, "bt42")
             }
             bt43 -> {
-                showDialog(bt43, "bt43")
+                //showDialog(bt43, "bt43")
             }
         }
         return true

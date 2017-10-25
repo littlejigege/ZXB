@@ -2,10 +2,18 @@ package com.qg.zxb.bluetooth
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import com.mobile.utils.showToast
+import com.mobile.utils.toast
 import com.qg.zxb.utils.log
+import java.io.BufferedReader
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.io.OutputStream
+import java.lang.StringBuilder
 import java.lang.reflect.Method
+import com.qg.zxb.ui.MainActivity
+import android.os.Bundle
+
 
 /**
  * Created by jimji on 2017/10/15.
@@ -19,13 +27,35 @@ class BTManager(device: BluetoothDevice) {
     private val mOutStream by lazy { mSocket.outputStream }
     //消息线程,连接设备后开启
     private val msgThread = Thread({
+        var readMessage: StringBuilder = StringBuilder()
         while (true) {
-            val bytes: ByteArray = kotlin.ByteArray(1024)
-            val list = mInStream.reader().forEachLine {
-                if (msgListener != null) {
-                    msgListener!!.onMsg(it)
+            val buffer = ByteArray(1024)
+            val bytes: Int
+            val availableBytes = mInStream.available()
+            if (availableBytes > 0) {
+                Thread.sleep(500)
+                bytes = mInStream.read(buffer)
+                readMessage.append(String(buffer, 0, bytes))
+                if (mInStream.available() == 0) {
+                    msgListener!!.onMsg(readMessage.toString())
+                    readMessage = StringBuilder()
                 }
             }
+//            val bytes: ByteArray = kotlin.ByteArray(1024)
+//            mInStream.read(bytes)
+//            strBuilder.append(String(bytes))
+//            if (mInStream.available() == 0) {
+//                if (msgListener != null) {
+//                    msgListener!!.onMsg(strBuilder.toString())
+//                }
+//                strBuilder = StringBuilder()
+//            }
+
+//            val list = mInStream.reader().forEachLine {
+//                if (msgListener != null) {
+//                    msgListener!!.onMsg(it)
+//                }
+//            }
 
         }
     })
